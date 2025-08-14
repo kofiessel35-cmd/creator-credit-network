@@ -1,0 +1,15 @@
+import re
+from transformers import pipeline
+
+# Example: Load Hugging Face model for fake news detection
+classifier = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")  # Replace with fine-tuned model
+
+def verify_content(text):
+    # Regex for keyword flagging
+    if re.search(r'\bfake|misinfo\b', text, re.IGNORECASE):
+        return "Potential misinformation flagged"
+    result = classifier(text)
+    return result[0]['label'] if result[0]['score'] > 0.85 else "Uncertain"
+
+# Test
+print(verify_content("This is a deepfake video about elections."))
